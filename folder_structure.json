@@ -1,0 +1,28 @@
+{
+    "program files": {
+        "internet exploiter": {
+            "ie.js": null,
+            "index.html": null
+        }
+    },
+    "system": {
+        "boot": {
+            "api.js": null,
+            "kernel.js": null,
+            "kernelFunctions.js": null
+        },
+        "fonts": {
+            "W95FA.otf": null,
+            "w95fa.zip": null
+        },
+        "icons": {
+            "accesibility_window_abc.png": null,
+            "application_hourglass_small_cool-5.png": null,
+            "msie1-2.png": null,
+            "windows_slanted-1.png": null
+        },
+        "themes": {
+            "main.css": null
+        }
+    }
+}
