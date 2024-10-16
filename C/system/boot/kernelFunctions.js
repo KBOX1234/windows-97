@@ -79,22 +79,13 @@ function loadFile(id) {
     });
 }
 
-
-async function clearIDAPI() {
-
-    // Wait for 2 seconds (2000 milliseconds)
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-
-    //AskForIDStat = "ready"
-    
-}
-
 function openDatabase() {
     return new Promise((resolve, reject) => {
         const request = indexedDB.open("MyFilesDB", 1);
 
         request.onupgradeneeded = (event) => {
             const db = event.target.result;
+            // Create the object store if it doesn't exist
             if (!db.objectStoreNames.contains('files')) {
                 db.createObjectStore('files', { keyPath: 'id' });
                 console.log("Object store 'files' created.");
@@ -103,12 +94,13 @@ function openDatabase() {
 
         request.onsuccess = (event) => {
             console.log("Database opened successfully.");
-            resolve(event.target.result); // Return the opened database
+            db = event.target.result; // Store the reference to the opened database
+            resolve(db); // Resolve with the opened database
         };
 
         request.onerror = (event) => {
             console.error("Database error:", event.target.errorCode);
-            reject(event.target.error);
+            reject(event.target.error); // Reject with the error
         };
     });
 }
@@ -202,4 +194,58 @@ function makeResizable(elementId) {
         window.addEventListener("mousemove", doDrag);
         window.addEventListener("mouseup", stopDrag);
     });
+}
+
+
+function listFoldersInDirectory(directory) {
+    console.log("Listing folders in directory:", directory);
+
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction(['files'], 'readonly');
+        const objectStore = transaction.objectStore('files');
+        const folders = new Set();
+
+        const request = objectStore.openCursor();
+
+        request.onsuccess = (event) => {
+            const cursor = event.target.result;
+
+            if (cursor) {
+                const filePath = cursor.value.id; // Use ID instead of path
+
+                // Log the file ID being processed
+                console.log("Processing file ID:", filePath);
+
+                // Check if the ID represents a file under the specified directory
+                if (filePath.startsWith(directory)) {
+                    const relativePath = filePath.slice(directory.length);
+                    const folderName = relativePath.split('/')[0];
+
+                    if (folderName) {
+                        folders.add(folderName);
+                        console.log("Added folder:", folderName);
+                    }
+                }
+
+                cursor.continue();
+            } else {
+                console.log("Finished processing. Unique folders found:", Array.from(folders));
+                resolve(Array.from(folders));
+            }
+        };
+
+        request.onerror = (event) => {
+            const errorMsg = "Error accessing object store: " + event.target.error;
+            console.error(errorMsg);
+            reject(errorMsg);
+        };
+    }).catch((error) => {
+        console.error('Failed to list folders:', error);
+        throw error;
+    });
+}
+
+async function sendToIframe(id, data){
+    const iframe = document.getElementById(id);
+    iframe.contentWindow.postMessage(data, '*');
 }

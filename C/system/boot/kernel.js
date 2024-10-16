@@ -17,7 +17,28 @@ async function launch(file){
     var decoded = atob(fileD);
     console.log(fileD+"\n"+decoded);
     idINCstr = String(idINC);
-    eval(decoded);
+    var myID = idINC;
+    idINC++;
+    appilcationIDs[myID] = { name: "kernel", api: "NULL", data1: "null", data2: null, status: "ready", icon: "C/system/icons/msie1-2.png", windowType: "default"};
+    console.log(myID);
+
+    appilcationIDs[myID].name = "Internet Exploiter"
+
+    delay(500);
+
+    appilcationIDs[myID].api = "window";
+    appilcationIDs[myID].data1 = file;
+
+    //delay(1000);
+
+    let idString = "iframe_" + String(myID);
+
+    const iframe = document.getElementById(idString);
+
+    const data = { api: 'id', value: myID, iframeId: myID};
+
+    iframe.contentWindow.postMessage(data, '*');
+    
     
 }
 
@@ -58,7 +79,6 @@ async function kernel() {
                 let decodedSource = atob(source);
 
                 //default html app
-                if(appilcationIDs[inc].windowType == "default"){
                     //contentDiv.innerHTML = '<iframe src="'+'data:text/html;base64,'+source+'" frameborder="0" width="100%" height="100%" style="position: absolute; top: 40px; left: 0;"></iframe>';
                     const iframe = document.createElement("iframe");
                     iframe.frameBorder = "0";  // Set iframe attributes
@@ -67,21 +87,19 @@ async function kernel() {
                     iframe.style.position = "absolute";
                     iframe.style.top = "10%";
                     iframe.style.left = "0%";
+                    iframe.id = "iframe_"+String(inc);
 
                     // Set the src attribute with the data URI
 
                     const cssStyle = await loadFile("C/system/themes/main.css")
-
-                    let endString = '<!DOCTYPE html><html><head><link rel="stylesheet" href="'+'data:text/css;base64,'+cssStyle+'"><title>'+appilcationIDs[inc].name+'</title></head><body>'+decodedSource+'</body></html>'
+                    const apijs = await loadFile("C/system/lib/api.js")
+                    let endString = '<!DOCTYPE html><html><head><link rel="stylesheet" href="'+'data:text/css;base64,'+cssStyle+'"><title>'+appilcationIDs[inc].name+'</title></head><body><script src="data:application/x-javascript;base64,'+apijs+'"></script><script>var id = '+inc+'</script>'+decodedSource+'</body></html>'
                     let recodedString = btoa(endString);
                     iframe.src = 'data:text/html;base64,' + recodedString;
 
                     // Append the iframe to contentDiv
                     contentDiv.appendChild(iframe);
-                }
 
-                //full api based app
-                
             
                 // Append title bar and content div to the main window
                 newWindow.appendChild(titleBar);
@@ -99,6 +117,9 @@ async function kernel() {
                 makeResizable(inc);
                 makeDraggable(newWindow); 
 
+
+                
+
             }
             
         }
@@ -112,8 +133,8 @@ async function openStartMenu() {
     if(start == false){
         let menu = document.createElement("div");
         menu.id = "startmenu";
-        menu.innerHTML = '<button class="startentry" onclick="launch(\'C/program files/internet exploiter/ie.js\')">Internet Exploiter</button><br>';
-        menu.innerHTML = menu.innerHTML + '<button class="startentry" onclick="launch(\'C/program files/filemanager/fm.js\')">File Manager</button><br>';
+        menu.innerHTML = '<button class="startentry" onclick="launch(\'C/program files/internet exploiter/index.html\')">Internet Exploiter</button><br>';
+        menu.innerHTML = menu.innerHTML + '<button class="startentry" onclick="launch(\'C/program files/filemanager/fm.html\')">File Manager</button><br>';
         document.getElementById("main").appendChild(menu);
         start = true;
     }

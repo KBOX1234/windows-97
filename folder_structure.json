@@ -1,7 +1,7 @@
 {
     "program files": {
         "filemanager": {
-            "fm.js": null
+            "fm.html": null
         },
         "internet exploiter": {
             "ie.js": null,
@@ -23,6 +23,9 @@
             "application_hourglass_small_cool-5.png": null,
             "msie1-2.png": null,
             "windows_slanted-1.png": null
+        },
+        "lib": {
+            "api.js": null
         },
         "themes": {
             "main.css": null

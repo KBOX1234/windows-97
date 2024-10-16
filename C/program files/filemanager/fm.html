@@ -1,0 +1,41 @@
+<script>
+        var currentDir = "C/";
+        var array = [];
+        window.addEventListener('message', (event) => {
+                // Check the origin of the message for security
+                // if (event.origin !== 'https://your-allowed-origin.com') return;
+
+                // Log or use the received data
+                console.error('Received data:', event.data.api);
+                if(event.data.api == "id"){
+                        id = event.data.value;
+                }
+                if(event.data.api == "dir"){
+                        array=event.data.value;
+                        console.log("IT FINALY FRIGGEN HAPPENED" + array);
+                }
+        });
+
+        // Fetch directory info by sending a message to the parent
+        dir(currentDir, id);
+        
+        // Function to display directory contents
+        function display() {
+            let filesDiv = document.getElementById("files");
+            filesDiv.innerHTML = ""; // Clear previous content
+        
+            // Build the HTML for the buttons
+            let buttonsHTML = array.map(item => `<button>${item}</button>`).join("");
+        
+            // Set the innerHTML once
+            filesDiv.innerHTML = buttonsHTML;
+        }
+        
+        // Function to send a request to the parent
+
+        </script>
+        
+        <div id="main">
+            <div id="files"></div>
+        </div>
+        
