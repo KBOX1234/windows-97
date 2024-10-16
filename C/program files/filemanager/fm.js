@@ -3,9 +3,8 @@ idINC++;
 appilcationIDs[myID] = { name: "kernel", api: "NULL", data1: "null", data2: null, status: "ready", icon: "C/system/icons/msie1-2.png", windowType: "default"};
 console.log(myID);
 
-appilcationIDs[myID].name = "Internet Exploiter"
+appilcationIDs[myID].name = "File Manager"
 
 delay(500);
 
 appilcationIDs[myID].api = "window";
-appilcationIDs[myID].data1 = "C/program files/internet exploiter/index.html";

@@ -1,5 +1,8 @@
 {
     "program files": {
+        "filemanager": {
+            "fm.js": null
+        },
         "internet exploiter": {
             "ie.js": null,
             "index.html": null

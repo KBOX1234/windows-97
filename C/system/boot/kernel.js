@@ -1,5 +1,5 @@
 var appilcationIDs = [
-    { name: "kernel", api: "NULL", data1: "null", data2: null, status: "ready"},
+    { name: "kernel", api: "NULL", data1: "null", data2: null, status: "NULL", icon: "C/system/icons/accesibility_window_abc.png", windowType: "default"},
 
 ];
 var test = "IT FRIGGEN WORKS";
@@ -56,42 +56,32 @@ async function kernel() {
                 contentDiv.id = "content_" + inc; // Set the ID for content div
                 const source = await loadFile(appilcationIDs[inc].data1);
                 let decodedSource = atob(source);
-                //contentDiv.innerHTML = '<iframe src="'+'data:text/html;base64,'+source+'" frameborder="0" width="100%" height="100%" style="position: absolute; top: 40px; left: 0;"></iframe>';
-                const iframe = document.createElement("iframe");
-                iframe.frameBorder = "0";  // Set iframe attributes
-                iframe.width = "100%";
-                iframe.height = "90%";
-                iframe.style.position = "absolute";
-                iframe.style.top = "10%";
-                iframe.style.left = "0";
 
-                // Set the src attribute with the data URI
+                //default html app
+                if(appilcationIDs[inc].windowType == "default"){
+                    //contentDiv.innerHTML = '<iframe src="'+'data:text/html;base64,'+source+'" frameborder="0" width="100%" height="100%" style="position: absolute; top: 40px; left: 0;"></iframe>';
+                    const iframe = document.createElement("iframe");
+                    iframe.frameBorder = "0";  // Set iframe attributes
+                    iframe.width = "90%";
+                    iframe.height = "80%";
+                    iframe.style.position = "absolute";
+                    iframe.style.top = "10%";
+                    iframe.style.left = "0%";
 
-                const cssStyle = await loadFile("C/system/themes/main.css")
+                    // Set the src attribute with the data URI
 
-                let endString = '<!DOCTYPE html><html><head><link rel="stylesheet" href="'+'data:text/css;base64,'+cssStyle+'"><title>'+appilcationIDs[inc].name+'</title></head><body>'+decodedSource+'</body></html>'
-                let recodedString = btoa(endString);
-                iframe.src = 'data:text/html;base64,' + recodedString;
+                    const cssStyle = await loadFile("C/system/themes/main.css")
 
-                // Append the iframe to contentDiv
-                contentDiv.appendChild(iframe);
+                    let endString = '<!DOCTYPE html><html><head><link rel="stylesheet" href="'+'data:text/css;base64,'+cssStyle+'"><title>'+appilcationIDs[inc].name+'</title></head><body>'+decodedSource+'</body></html>'
+                    let recodedString = btoa(endString);
+                    iframe.src = 'data:text/html;base64,' + recodedString;
 
-                /*let bottomRight = document.createElement("div");
-                bottomRight.style.top = "0%";
-                bottomRight.style.left = "0%";
-                bottomRight.style.backgroundColor = "rgb(44, 0, 44)";
-                bottomRight.style.position = "absolute"
+                    // Append the iframe to contentDiv
+                    contentDiv.appendChild(iframe);
+                }
 
-                let bottomleft = document.createElement("div");
-                bottomleft.style.top = "0%";
-                bottomleft.style.left = "100%";
-                bottomleft.style.position = "absolute"
-
-                makeDraggable(bottomRight);
-                makeDraggable(bottomleft);
-
-                newWindow.appendChild(bottomRight);
-                newWindow.appendChild(bottomleft);*/
+                //full api based app
+                
             
                 // Append title bar and content div to the main window
                 newWindow.appendChild(titleBar);
@@ -111,25 +101,11 @@ async function kernel() {
 
             }
             
-
-            /*if(appilcationIDs[inc].api == "windowSource"){
-                const windowS = await loadFile(appilcationIDs.data1);
-                let grabIdString = "content_"+String(content_);
-                document.getElementById(grabIdString).innerHTML = windowS;
-            }*/
         }
         appilcationIDs[inc].api = "NULL";
         inc++;
     }
-    /*inc = 0;
-    while(inc < windowINC){
-        let incString2 = String(inc);
 
-        const div2 = document.getElementById(incString2);
-        makeDraggable(div2);
-        appilcationIDs[inc].api = "NULL";
-        inc++;
-    }*/
 }
 var start = false;
 async function openStartMenu() {
@@ -137,6 +113,7 @@ async function openStartMenu() {
         let menu = document.createElement("div");
         menu.id = "startmenu";
         menu.innerHTML = '<button class="startentry" onclick="launch(\'C/program files/internet exploiter/ie.js\')">Internet Exploiter</button><br>';
+        menu.innerHTML = menu.innerHTML + '<button class="startentry" onclick="launch(\'C/program files/filemanager/fm.js\')">File Manager</button><br>';
         document.getElementById("main").appendChild(menu);
         start = true;
     }
