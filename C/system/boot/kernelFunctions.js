@@ -118,29 +118,88 @@ function delay(ms) {
 }
 
 // Function to make a div draggable
+let isDragging = false;
+
 function makeDraggable(element) {
-    let offsetX = 0;
-    let offsetY = 0;
+    let offsetX = 0, offsetY = 0, mouseX = 0, mouseY = 0;
 
     element.addEventListener("mousedown", (e) => {
-        // Calculate offset
-        offsetX = e.clientX - element.getBoundingClientRect().left;
-        offsetY = e.clientY - element.getBoundingClientRect().top;
+        if (isResizing) return; // If resizing is happening, do not allow dragging
 
-        // Attach mouse move and mouse up events
-        document.addEventListener("mousemove", mouseMove);
-        document.addEventListener("mouseup", mouseUp);
+        isDragging = true;
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        offsetX = element.offsetLeft;
+        offsetY = element.offsetTop;
+
+        function doDrag(e) {
+            if (!isDragging) return;
+
+            // Calculate new position
+            const dx = e.clientX - mouseX;
+            const dy = e.clientY - mouseY;
+            element.style.left = offsetX + dx + "px";
+            element.style.top = offsetY + dy + "px";
+        }
+
+        function stopDrag() {
+            isDragging = false;
+            window.removeEventListener("mousemove", doDrag);
+            window.removeEventListener("mouseup", stopDrag);
+        }
+
+        // Attach event listeners for dragging
+        window.addEventListener("mousemove", doDrag);
+        window.addEventListener("mouseup", stopDrag);
     });
+}
 
-    function mouseMove(e) {
-        // Update the position of the div
-        element.style.left = `${e.clientX - offsetX}px`;
-        element.style.top = `${e.clientY - offsetY}px`;
+
+let isResizing = false; // Global flag to track resizing
+
+function makeResizable(elementId) {
+    const element = document.getElementById(elementId);
+    
+    if (!element) {
+        return; // Exit if the element doesn't exist
     }
 
-    function mouseUp() {
-        // Remove mouse move and mouse up events
-        document.removeEventListener("mousemove", mouseMove);
-        document.removeEventListener("mouseup", mouseUp);
-    }
+    const resizer = document.createElement("div");
+    resizer.style.width = "10px";
+    resizer.style.height = "10px";
+    resizer.style.background = "red"; // Resizer handle style
+    resizer.style.position = "absolute";
+    resizer.style.right = "0"; // Position to the right
+    resizer.style.bottom = "0"; // Position to the bottom
+    resizer.style.cursor = "se-resize"; // Cursor style
+
+    // Append the resizer to the element
+    element.appendChild(resizer);
+
+    resizer.addEventListener("mousedown", (e) => {
+        e.preventDefault();
+        isResizing = true; // Start resizing, disable dragging
+        
+        // Calculate the initial size of the element
+        const startWidth = element.offsetWidth;
+        const startHeight = element.offsetHeight;
+        const startX = e.clientX;
+        const startY = e.clientY;
+
+        function doDrag(e) {
+            // Calculate the new width and height based on mouse movement
+            element.style.width = startWidth + (e.clientX - startX) + "px";
+            element.style.height = startHeight + (e.clientY - startY) + "px";
+        }
+
+        function stopDrag() {
+            window.removeEventListener("mousemove", doDrag);
+            window.removeEventListener("mouseup", stopDrag);
+            isResizing = false; // End resizing, enable dragging
+        }
+
+        // Attach the drag event listeners
+        window.addEventListener("mousemove", doDrag);
+        window.addEventListener("mouseup", stopDrag);
+    });
 }

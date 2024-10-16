@@ -37,6 +37,7 @@ async function kernel() {
                 console.log(appilcationIDs[inc].data1);
             }
 
+            //window API
             if (appilcationIDs[inc].api == "window") {
                 // Create the main window div
                 let newWindow = document.createElement("div");
@@ -74,21 +75,40 @@ async function kernel() {
 
                 // Append the iframe to contentDiv
                 contentDiv.appendChild(iframe);
+
+                /*let bottomRight = document.createElement("div");
+                bottomRight.style.top = "0%";
+                bottomRight.style.left = "0%";
+                bottomRight.style.backgroundColor = "rgb(44, 0, 44)";
+                bottomRight.style.position = "absolute"
+
+                let bottomleft = document.createElement("div");
+                bottomleft.style.top = "0%";
+                bottomleft.style.left = "100%";
+                bottomleft.style.position = "absolute"
+
+                makeDraggable(bottomRight);
+                makeDraggable(bottomleft);
+
+                newWindow.appendChild(bottomRight);
+                newWindow.appendChild(bottomleft);*/
             
                 // Append title bar and content div to the main window
                 newWindow.appendChild(titleBar);
                 newWindow.appendChild(contentDiv);
+                //newWindow.className="resizable";
+                newWindow.style.position = "absolute";
+                newWindow.style.width = "600px"; // Set width
+                newWindow.style.height = "400px"; // Set height
             
                 // Append the new window to the main container
                 document.getElementById("main").appendChild(newWindow);
             
-                windowArray[windowINC++] = inc; // Increment window counter
+                windowArray[windowINC++] = inc;
             
-                const div = document.getElementById(inc);
-                div.style.position = "absolute";
-                div.style.width = "600px"; // Set width
-                div.style.height = "400px"; // Set height
-                makeDraggable(div); // Make the window draggable
+                makeResizable(inc);
+                makeDraggable(newWindow); 
+
             }
             
 
