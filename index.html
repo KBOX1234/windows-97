@@ -66,31 +66,36 @@
                 
                 //iframe comunication
                 window.addEventListener('message', async (event) => {
-    // Check the origin of the message for security
-    // if (event.origin !== 'https://your-allowed-origin.com') return;
+                    // Check the origin of the message for security
+                    // if (event.origin !== 'https://your-allowed-origin.com') return;
 
-    // Log or use the received data
-    console.log('Received data from iframe:', event.data.api);
-    console.log('From iframe ID:', event.data.iframeId);
-    
-    if (event.data.api === "dir") {
-        const sendID = "iframe_" + String(event.data.iframeId);
-        const iframe = document.getElementById(sendID);
+                    // Log or use the received data
+                    console.log('Received data from iframe:', event.data.api);
+                    console.log('From iframe ID:', event.data.iframeId);
+                    
+                    if (event.data.api === "dir") {
+                        const sendID = "iframe_" + String(event.data.iframeId);
+                        const iframe = document.getElementById(sendID);
 
-        try {
-            // Wait for the result of the asynchronous function
-            const sendArray = await listFoldersInDirectory(event.data.value);
+                        try {
+                            // Wait for the result of the asynchronous function
+                            const sendArray = await listFoldersInDirectory(event.data.value);
 
-            const data = { api: 'dir', value: sendArray, iframeId: event.data.iframeId };
-            console.log("send ID is: " + sendID);
+                            const data = { api: 'dir', value: sendArray, iframeId: event.data.iframeId };
+                            console.log("send ID is: " + sendID);
 
-            // Send the data to the iframe
-            iframe.contentWindow.postMessage(data, '*');
-        } catch (error) {
-            console.error('Error fetching directory data:', error);
-        }
-    }
-});
+                            // Send the data to the iframe
+                            iframe.contentWindow.postMessage(data, '*');
+                        } catch (error) {
+                            console.error('Error fetching directory data:', error);
+                        }
+                    }
+
+                    else if (event.data.api === "launch.html") {
+                        launch(event.data.value, 'html viewer');
+                        console.log("Launching file");
+                    }
+                });
 
 
                 openDatabase();

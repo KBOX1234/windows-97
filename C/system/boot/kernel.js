@@ -12,7 +12,7 @@ var AskForIDStat = "ready";
 var windowArray = [];
 var windowINC = 0;
 
-async function launch(file){
+async function launch(file, name){
     const fileD = await loadFile(file);
     var decoded = atob(fileD);
     console.log(fileD+"\n"+decoded);
@@ -22,7 +22,7 @@ async function launch(file){
     appilcationIDs[myID] = { name: "kernel", api: "NULL", data1: "null", data2: null, status: "ready", icon: "C/system/icons/msie1-2.png", windowType: "default"};
     console.log(myID);
 
-    appilcationIDs[myID].name = "Internet Exploiter"
+    appilcationIDs[myID].name = name
 
     delay(500);
 
@@ -133,8 +133,8 @@ async function openStartMenu() {
     if(start == false){
         let menu = document.createElement("div");
         menu.id = "startmenu";
-        menu.innerHTML = '<button class="startentry" onclick="launch(\'C/program files/internet exploiter/index.html\')">Internet Exploiter</button><br>';
-        menu.innerHTML = menu.innerHTML + '<button class="startentry" onclick="launch(\'C/program files/filemanager/fm.html\')">File Manager</button><br>';
+        menu.innerHTML = '<button class="startentry" onclick="launch(\'C/program files/internet exploiter/index.html\', \'Internet Exploiter\')">Internet Exploiter</button><br>';
+        menu.innerHTML = menu.innerHTML + '<button class="startentry" onclick="launch(\'C/program files/filemanager/fm.html\', \'File Manager\')">File Manager</button><br>';
         document.getElementById("main").appendChild(menu);
         start = true;
     }
