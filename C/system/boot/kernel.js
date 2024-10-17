@@ -12,7 +12,7 @@ var AskForIDStat = "ready";
 var windowArray = [];
 var windowINC = 0;
 
-async function launch(file, name){
+async function launch(file, argue1, argue2){
     if(file.endsWith(".html")){
         const fileD = await loadFile(file);
         var decoded = atob(fileD);
@@ -20,10 +20,10 @@ async function launch(file, name){
         idINCstr = String(idINC);
         var myID = idINC;
         idINC++;
-        appilcationIDs[myID] = { name: "kernel", api: "NULL", data1: "null", data2: null, status: "ready", icon: "C/system/icons/msie1-2.png", windowType: "default"};
+        appilcationIDs[myID] = { name: "kernel", api: "NULL", data1: argue1, data2: argue2, status: "ready", icon: "C/system/icons/msie1-2.png", windowType: "default"};
         console.log(myID);
     
-        appilcationIDs[myID].name = name
+        appilcationIDs[myID].name = "HTML viewer"
     
         delay(500);
     
@@ -47,7 +47,7 @@ async function launch(file, name){
         idINCstr = String(idINC);
         var myID = idINC;
         idINC++;
-        appilcationIDs[myID] = { name: parsedData.name, api: "NULL", data1: "null", data2: null, status: "ready", icon: parsedData.icon, windowType: "default"};
+        appilcationIDs[myID] = { name: parsedData.name, api: "NULL", data1: null, data2: argue1, data3: argue2, status: "ready", icon: parsedData.icon, windowType: "default"};
     
         delay(500);
     
@@ -107,7 +107,22 @@ async function kernel() {
 
                     const cssStyle = await loadFile("C/system/themes/main.css")
                     const apijs = await loadFile("C/system/lib/api.js")
-                    let endString = '<!DOCTYPE html><html><head><link rel="stylesheet" href="'+'data:text/css;base64,'+cssStyle+'"><title>'+appilcationIDs[inc].name+'</title></head><body><script src="data:application/x-javascript;base64,'+apijs+'"></script><script>var id = '+inc+'</script>'+decodedSource+'</body></html>'
+                    let fsf = "fail";
+                    //fsf = await loadFile(data3);
+                    if(appilcationIDs[inc].data2 == "file"){
+                        console.log("file mode triggered");
+                        fsf = "";
+                        
+                        if(appilcationIDs[inc].data3.endsWith(".png")){
+                            fsf = "data:image/png;base64,"
+                        }
+                        if(appilcationIDs[inc].data3.endsWith(".jpg") || appilcationIDs[inc].data3.endsWith(".jpeg")){
+                            fsf = "data:image/jpeg;base64,"
+                        }
+                        fsf = fsf + await loadFile(appilcationIDs[inc].data3);
+                    }
+                    console.log("aregument mode is: "+appilcationIDs[inc].data2);
+                    let endString = '<!DOCTYPE html><html><head><link rel="stylesheet" href="'+'data:text/css;base64,'+cssStyle+'"><title>'+appilcationIDs[inc].name+'</title></head><body><script src="data:application/x-javascript;base64,'+apijs+'"></script><script>var id = '+inc+';\nvar arg1 = "'+appilcationIDs[inc].data2+'";\nvar arg2 = "'+fsf+'";</script>'+decodedSource+'</body></html>'
                     let recodedString = btoa(endString);
                     iframe.src = 'data:text/html;base64,' + recodedString;
 
@@ -147,6 +162,9 @@ async function openStartMenu() {
     if(start == false){
         let menu = document.createElement("div");
         menu.id = "startmenu";
+        let sidebar = document.createElement("div");
+        sidebar.id = "sidebar";
+        menu.appendChild(sidebar)
         //menu.innerHTML = '<button class="startentry" onclick="launch(\'C/program files/internet exploiter/index.html\', \'Internet Exploiter\')">Internet Exploiter</button><br>';
         //menu.innerHTML = menu.innerHTML + '<button class="startentry" onclick="launch(\'C/program files/filemanager/fm.html\', \'File Manager\')">File Manager</button><br>';
 
@@ -156,6 +174,8 @@ async function openStartMenu() {
         
         inc = Object.keys(index).length;
 
+        menu.innerHTML='<div id="sidebar"></div>'
+
         while(inc > 0){
 
             const indexjsonb642 = await loadFile(index[inc]);
@@ -164,7 +184,7 @@ async function openStartMenu() {
 
             const icon = await loadFile(index2.icon);
             
-            menu.innerHTML = menu.innerHTML + '<button class="startentry" onclick="launch(\''+index[inc]+'\')"><img src="data:image/png;base64,'+icon+'">'+index2.name+'</button><br>';
+            menu.innerHTML = menu.innerHTML + '<button class="startentry" onclick="launch(\''+index[inc]+'\', \' \', 1)">'+index2.name+'<img class="starticon" src="data:image/png;base64,'+icon+'"></button><br>';
             inc--;
         }
         

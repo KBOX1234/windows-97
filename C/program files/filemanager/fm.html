@@ -7,13 +7,13 @@
                 // if (event.origin !== 'https://your-allowed-origin.com') return;
 
                 // Log or use the received data
-                console.log('Received data:', event.data.api);
+
                 if(event.data.api == "id"){
                         id = event.data.value;
                 }
                 if(event.data.api == "dir"){
                         array=event.data.value;
-                        console.log("IT FINALY FRIGGEN HAPPENED" + array);
+                        //console.log("IT FINALY FRIGGEN HAPPENED" + array);
                         display();
                 }
         });
@@ -28,10 +28,16 @@
                 else if (folder.endsWith(".link")) {
                         launchAPI(currentDir+folder, id, 'link');
                 }
+                else if (folder.endsWith(".png")) {
+                        launchAPI(currentDir+folder, id, 'png');
+                }
+                else if (folder.endsWith(".jpg") || folder.endsWith(".jpeg")) {
+                        launchAPI(currentDir+folder, id, 'jpg');
+                }
                 else{
                         currentDir = currentDir+folder+"/";
                         dir(currentDir, id);
-                        console.log("current directory is:"+ currentDir);
+                        //console.log("current directory is:"+ currentDir);
                 }
                 //currentFolder = folder;
         }

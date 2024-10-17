@@ -1,15 +1,18 @@
 {
-    "ie.link": null,
     "program data": {
         "index.json": null,
         "lnks": {
             "fm.link": null,
-            "ie.link": null
+            "ie.link": null,
+            "imageview.link": null
         }
     },
     "program files": {
         "filemanager": {
             "fm.html": null
+        },
+        "imgviewer": {
+            "imgviewer.html": null
         },
         "internet exploiter": {
             "ie.js": null,
@@ -38,6 +41,17 @@
         },
         "themes": {
             "main.css": null
+        }
+    },
+    "Untitled.png": null,
+    "user": {
+        "photoes": {
+            "drawing_2024-09-30_10-34-01.png": null,
+            "drawing_2024-09-30_10-40-01.png": null,
+            "drawing_2024-09-30_10-46-29.png": null,
+            "mr.gay.png": null,
+            "pkatu.png": null,
+            "Untitled.png": null
         }
     }
 }

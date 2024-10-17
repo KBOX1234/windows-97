@@ -14,7 +14,7 @@
     border-width: 2px;
 }
 .titleBar{
-    background: linear-gradient(to right, rgb(43, 43, 250), white);
+    background: linear-gradient(to right, rgb(43, 43, 250), rgb(0, 132, 255));
 
     font-family: win99;
     cursor: move; /* Change cursor to indicate draggable */
@@ -62,6 +62,10 @@
     position: absolute;
 }
 
+.starticon{
+    width: 48px;
+}
+
 .startentry{
     width: 100%;
     height: 48px;
@@ -90,6 +94,20 @@
 
 .resizer:hover {
     background: #0056b3; /* Darker color on hover */
+}
+
+#sidebar{
+    display: inline-block; /* Required for the transform to work properly */
+    transform: rotate(-90deg);
+    /* Optional: Adjust positioning if needed */
+    transform-origin: left bottom;
+    font-family: 'Times New Roman', Times, serif;
+    background: linear-gradient(to right, rgb(43, 43, 250), rgb(119, 194, 255));
+    position: absolute;
+
+    top: 448px;
+    height: 64px;
+    width: 512px;
 }
 
 h1{

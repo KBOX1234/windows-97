@@ -200,50 +200,100 @@ function makeResizable(elementId) {
 function listFoldersInDirectory(directory) {
     console.log("Listing folders in directory:", directory);
 
-    return new Promise((resolve, reject) => {
-        const transaction = db.transaction(['files'], 'readonly');
-        const objectStore = transaction.objectStore('files');
-        const folders = new Set();
+    // Function to read the JSON file
+    const readJsonFile = () => {
+        return new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            xhr.open("GET", "C/files.json", true); // Adjust the path as necessary
+            xhr.onload = () => {
+                if (xhr.status === 200) {
+                    try {
+                        const jsonData = JSON.parse(xhr.responseText);
+                        resolve(jsonData); // Resolve with the parsed JSON data
+                    } catch (error) {
+                        reject("Error parsing JSON: " + error);
+                    }
+                } else {
+                    reject("Failed to load JSON file: " + xhr.status);
+                }
+            };
+            xhr.onerror = () => {
+                reject("Error loading JSON file.");
+            };
+            xhr.send();
+        });
+    };
 
-        const request = objectStore.openCursor();
+    // Function to scan IndexedDB
+    const scanIndexedDB = () => {
+        return new Promise((resolve, reject) => {
+            const transaction = db.transaction(['files'], 'readonly');
+            const objectStore = transaction.objectStore('files');
+            const folders = new Set();
 
-        request.onsuccess = (event) => {
-            const cursor = event.target.result;
+            const request = objectStore.openCursor();
 
-            if (cursor) {
-                const filePath = cursor.value.id; // Use ID instead of path
+            request.onsuccess = (event) => {
+                const cursor = event.target.result;
 
-                // Log the file ID being processed
-                console.log("Processing file ID:", filePath);
+                if (cursor) {
+                    const filePath = cursor.value.id; // Use ID instead of path
 
-                // Check if the ID represents a file under the specified directory
+                    // Log the file ID being processed
+                    console.log("Processing file ID:", filePath);
+
+                    // Check if the ID represents a file under the specified directory
+                    if (filePath.startsWith(directory)) {
+                        const relativePath = filePath.slice(directory.length);
+                        const folderName = relativePath.split('/')[0];
+
+                        if (folderName) {
+                            folders.add(folderName);
+                            console.log("Added folder:", folderName);
+                        }
+                    }
+
+                    cursor.continue();
+                } else {
+                    console.log("Finished processing. Unique folders found:", Array.from(folders));
+                    resolve(Array.from(folders));
+                }
+            };
+
+            request.onerror = (event) => {
+                const errorMsg = "Error accessing object store: " + event.target.error;
+                console.error(errorMsg);
+                reject(errorMsg);
+            };
+        });
+    };
+
+    // Main logic
+    return readJsonFile()
+        .then(jsonData => {
+            // Process the JSON data to extract folders if JSON file exists
+            const folders = new Set();
+            for (const file of jsonData.files) {
+                const filePath = file.id; // Assuming your JSON has an array of files with an 'id' property
                 if (filePath.startsWith(directory)) {
                     const relativePath = filePath.slice(directory.length);
                     const folderName = relativePath.split('/')[0];
-
                     if (folderName) {
                         folders.add(folderName);
-                        console.log("Added folder:", folderName);
+                        console.log("Added folder from JSON:", folderName);
                     }
                 }
-
-                cursor.continue();
-            } else {
-                console.log("Finished processing. Unique folders found:", Array.from(folders));
-                resolve(Array.from(folders));
             }
-        };
-
-        request.onerror = (event) => {
-            const errorMsg = "Error accessing object store: " + event.target.error;
-            console.error(errorMsg);
-            reject(errorMsg);
-        };
-    }).catch((error) => {
-        console.error('Failed to list folders:', error);
-        throw error;
-    });
+            console.log("Unique folders found from JSON:", Array.from(folders));
+            return Array.from(folders);
+        })
+        .catch(error => {
+            console.warn("JSON file not found or error occurred, scanning IndexedDB:", error);
+            // Fall back to scanning IndexedDB if JSON file is not found
+            return scanIndexedDB();
+        });
 }
+
 
 async function sendToIframe(id, data){
     const iframe = document.getElementById(id);

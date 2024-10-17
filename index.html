@@ -15,9 +15,10 @@
 
         <script src="C/system/boot/kernelFunctions.js"></script>
         <script src="C/system/boot/kernel.js"></script>
-        <script src="C/system/lib/api.js"></script>
+
         <script>
 
+            
             const baseDirectory = 'C'; // Set the base directory
 
             async function loadAndPrintFolderStructure(jsonFilePath) {
@@ -98,6 +99,14 @@
                     else if (event.data.api === "launch.link") {
                         launch(event.data.value, 'html viewer');
                         console.log("Launching file");
+                    }
+                    else if (event.data.api === "launch.png") {
+                        launch("C/program data/lnks/imageview.link", "file", event.data.value);
+                        console.log("Loading image: "+event.data.value);
+                    }
+                    else if (event.data.api === "launch.jpg") {
+                        launch("C/program data/lnks/imageview.link", "file", event.data.value);
+                        console.log("Loading image: "+event.data.value);
                     }
                 });
 
