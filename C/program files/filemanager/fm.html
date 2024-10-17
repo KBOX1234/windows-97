@@ -25,6 +25,9 @@
                 if (folder.endsWith(".html")) {
                         launchAPI(currentDir+folder, id, 'html');
                 }
+                else if (folder.endsWith(".link")) {
+                        launchAPI(currentDir+folder, id, 'link');
+                }
                 else{
                         currentDir = currentDir+folder+"/";
                         dir(currentDir, id);

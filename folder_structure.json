@@ -1,4 +1,12 @@
 {
+    "ie.link": null,
+    "program data": {
+        "index.json": null,
+        "lnks": {
+            "fm.link": null,
+            "ie.link": null
+        }
+    },
     "program files": {
         "filemanager": {
             "fm.html": null
@@ -21,6 +29,7 @@
         "icons": {
             "accesibility_window_abc.png": null,
             "application_hourglass_small_cool-5.png": null,
+            "directory_closed-4.png": null,
             "msie1-2.png": null,
             "windows_slanted-1.png": null
         },

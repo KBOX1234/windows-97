@@ -13,33 +13,47 @@ var windowArray = [];
 var windowINC = 0;
 
 async function launch(file, name){
-    const fileD = await loadFile(file);
-    var decoded = atob(fileD);
-    console.log(fileD+"\n"+decoded);
-    idINCstr = String(idINC);
-    var myID = idINC;
-    idINC++;
-    appilcationIDs[myID] = { name: "kernel", api: "NULL", data1: "null", data2: null, status: "ready", icon: "C/system/icons/msie1-2.png", windowType: "default"};
-    console.log(myID);
-
-    appilcationIDs[myID].name = name
-
-    delay(500);
-
-    appilcationIDs[myID].api = "window";
-    appilcationIDs[myID].data1 = file;
-
-    //delay(1000);
-
-    let idString = "iframe_" + String(myID);
-
-    const iframe = document.getElementById(idString);
-
-    const data = { api: 'id', value: myID, iframeId: myID};
-
-    iframe.contentWindow.postMessage(data, '*');
+    if(file.endsWith(".html")){
+        const fileD = await loadFile(file);
+        var decoded = atob(fileD);
+        console.log(fileD+"\n"+decoded);
+        idINCstr = String(idINC);
+        var myID = idINC;
+        idINC++;
+        appilcationIDs[myID] = { name: "kernel", api: "NULL", data1: "null", data2: null, status: "ready", icon: "C/system/icons/msie1-2.png", windowType: "default"};
+        console.log(myID);
     
+        appilcationIDs[myID].name = name
     
+        delay(500);
+    
+        appilcationIDs[myID].api = "window";
+        appilcationIDs[myID].data1 = file;
+    
+        //delay(1000);
+    
+        let idString = "iframe_" + String(myID);
+    
+        const iframe = document.getElementById(idString);
+    
+        const data = { api: 'id', value: myID, iframeId: myID};
+    
+        iframe.contentWindow.postMessage(data, '*');
+    }
+    if(file.endsWith(".link")){
+        const linkfile = await loadFile(file);
+        const jsonString = atob(linkfile);
+        const parsedData = JSON.parse(jsonString);
+        idINCstr = String(idINC);
+        var myID = idINC;
+        idINC++;
+        appilcationIDs[myID] = { name: parsedData.name, api: "NULL", data1: "null", data2: null, status: "ready", icon: parsedData.icon, windowType: "default"};
+    
+        delay(500);
+    
+        appilcationIDs[myID].api = "window";
+        appilcationIDs[myID].data1 = parsedData.prg;
+    }
 }
 
 function destroyWindow(id){
@@ -82,8 +96,8 @@ async function kernel() {
                     //contentDiv.innerHTML = '<iframe src="'+'data:text/html;base64,'+source+'" frameborder="0" width="100%" height="100%" style="position: absolute; top: 40px; left: 0;"></iframe>';
                     const iframe = document.createElement("iframe");
                     iframe.frameBorder = "0";  // Set iframe attributes
-                    iframe.width = "90%";
-                    iframe.height = "80%";
+                    iframe.width = "95%";
+                    iframe.height = "95%";
                     iframe.style.position = "absolute";
                     iframe.style.top = "10%";
                     iframe.style.left = "0%";
@@ -133,8 +147,27 @@ async function openStartMenu() {
     if(start == false){
         let menu = document.createElement("div");
         menu.id = "startmenu";
-        menu.innerHTML = '<button class="startentry" onclick="launch(\'C/program files/internet exploiter/index.html\', \'Internet Exploiter\')">Internet Exploiter</button><br>';
-        menu.innerHTML = menu.innerHTML + '<button class="startentry" onclick="launch(\'C/program files/filemanager/fm.html\', \'File Manager\')">File Manager</button><br>';
+        //menu.innerHTML = '<button class="startentry" onclick="launch(\'C/program files/internet exploiter/index.html\', \'Internet Exploiter\')">Internet Exploiter</button><br>';
+        //menu.innerHTML = menu.innerHTML + '<button class="startentry" onclick="launch(\'C/program files/filemanager/fm.html\', \'File Manager\')">File Manager</button><br>';
+
+        const indexjsonb64 = await loadFile("C/program data/index.json");
+        const decodedjsonf = atob(indexjsonb64);
+        const index = JSON.parse(decodedjsonf);
+        
+        inc = Object.keys(index).length;
+
+        while(inc > 0){
+
+            const indexjsonb642 = await loadFile(index[inc]);
+            const decodedjsonf2 = atob(indexjsonb642);
+            const index2 = JSON.parse(decodedjsonf2);
+
+            const icon = await loadFile(index2.icon);
+            
+            menu.innerHTML = menu.innerHTML + '<button class="startentry" onclick="launch(\''+index[inc]+'\')"><img src="data:image/png;base64,'+icon+'">'+index2.name+'</button><br>';
+            inc--;
+        }
+        
         document.getElementById("main").appendChild(menu);
         start = true;
     }

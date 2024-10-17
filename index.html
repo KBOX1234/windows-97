@@ -95,6 +95,10 @@
                         launch(event.data.value, 'html viewer');
                         console.log("Launching file");
                     }
+                    else if (event.data.api === "launch.link") {
+                        launch(event.data.value, 'html viewer');
+                        console.log("Launching file");
+                    }
                 });
 
 
