@@ -37,25 +37,40 @@
 
             async function fetchAndStoreFiles(structure, currentDir = baseDirectory) {
                 for (const name in structure) {
-                    const itemPath = `${currentDir}/${name}`; // Use the base directory for paths
-                    console.log(itemPath); // Print the name
 
-                    if (structure[name] !== null) { // If it's a directory, call recursively
+                    const itemPath = `${currentDir}/${name}`;
+
+                    console.log(itemPath);
+
+                    if (structure[name] !== null) {
+
                         await fetchAndStoreFiles(structure[name], itemPath);
-                    } else { // It's a file, fetch its contents
+
+
+                    }
+
+                    else {
                         try {
+
                             const fileResponse = await fetch(itemPath);
+
+
                             if (!fileResponse.ok) {
                                 throw new Error(`Error fetching file: ${itemPath}`);
                             }
 
                             const fileBlob = await fileResponse.blob();
                             const reader = new FileReader();
+
+
                             reader.onloadend = function() {
-                                const base64data = reader.result.split(',')[1]; // Get base64 encoded data
-                                saveFile(itemPath, base64data); // Call your saveFile function
+                                const base64data = reader.result.split(',')[1];
+                                saveFile(itemPath, base64data);
                             };
-                            reader.readAsDataURL(fileBlob); // Read the file as a data URL
+
+
+                            reader.readAsDataURL(fileBlob);
+
                         } catch (error) {
                             console.error('Error fetching the file:', error);
                         }
@@ -64,13 +79,12 @@
             }
 
             async function startup() {
-                
-                //iframe comunication
-                window.addEventListener('message', async (event) => {
-                    // Check the origin of the message for security
-                    // if (event.origin !== 'https://your-allowed-origin.com') return;
 
-                    // Log or use the received data
+
+                window.addEventListener('message', async (event) => {
+
+
+
                     console.log('Received data from iframe:', event.data.api);
                     console.log('From iframe ID:', event.data.iframeId);
                     
@@ -79,14 +93,16 @@
                         const iframe = document.getElementById(sendID);
 
                         try {
-                            // Wait for the result of the asynchronous function
+
+
                             const sendArray = await listFoldersInDirectory(event.data.value);
 
                             const data = { api: 'dir', value: sendArray, iframeId: event.data.iframeId };
                             console.log("send ID is: " + sendID);
 
-                            // Send the data to the iframe
+
                             iframe.contentWindow.postMessage(data, '*');
+
                         } catch (error) {
                             console.error('Error fetching directory data:', error);
                         }
@@ -96,14 +112,17 @@
                         launch(event.data.value, 'html viewer');
                         console.log("Launching file");
                     }
+
                     else if (event.data.api === "launch.link") {
                         launch(event.data.value, 'html viewer');
                         console.log("Launching file");
                     }
+
                     else if (event.data.api === "launch.png") {
                         launch("C/program data/lnks/imageview.link", "file", event.data.value);
                         console.log("Loading image: "+event.data.value);
                     }
+
                     else if (event.data.api === "launch.jpg") {
                         launch("C/program data/lnks/imageview.link", "file", event.data.value);
                         console.log("Loading image: "+event.data.value);

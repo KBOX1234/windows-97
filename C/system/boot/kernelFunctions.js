@@ -4,7 +4,7 @@ function saveFile(id, content) {
     request.onupgradeneeded = (event) => {
         const db = event.target.result;
 
-        // Create the object store if it doesn't exist
+
         if (!db.objectStoreNames.contains('files')) {
             db.createObjectStore('files', { keyPath: 'id' });
         }
@@ -20,7 +20,7 @@ function saveFile(id, content) {
             content: content
         };
 
-        const addRequest = objectStore.put(fileData);  // Use put to add or update
+        const addRequest = objectStore.put(fileData);
 
         addRequest.onsuccess = () => {
             console.log("File saved successfully:", fileData);
@@ -35,6 +35,12 @@ function saveFile(id, content) {
         console.error("Database error:", event.target.errorCode);
     };
 }
+
+
+
+
+
+
 
 function loadFile(id) {
     return new Promise((resolve, reject) => {  // Return a promise
@@ -53,28 +59,28 @@ function loadFile(id) {
             const transaction = db.transaction("files", "readonly");
             const objectStore = transaction.objectStore("files");
 
-            const getRequest = objectStore.get(id);  // Get the file by ID
+            const getRequest = objectStore.get(id);
 
             getRequest.onsuccess = (event) => {
                 const fileData = event.target.result;
                 if (fileData) {
                     console.log("File loaded successfully:", fileData);
-                    resolve(fileData.content);  // Resolve the promise with content
+                    resolve(fileData.content);
                 } else {
                     console.log("File not found with ID:", id);
-                    resolve(null);  // Resolve with null if file is not found
+                    resolve(null);
                 }
             };
 
             getRequest.onerror = (event) => {
                 console.error("Error loading file:", event.target.error);
-                reject(event.target.error);  // Reject the promise on error
+                reject(event.target.error);
             };
         };
 
         request.onerror = (event) => {
             console.error("Database error:", event.target.errorCode);
-            reject(event.target.error);  // Reject the promise on error
+            reject(event.target.error);
         };
     });
 }
@@ -94,13 +100,13 @@ function openDatabase() {
 
         request.onsuccess = (event) => {
             console.log("Database opened successfully.");
-            db = event.target.result; // Store the reference to the opened database
-            resolve(db); // Resolve with the opened database
+            db = event.target.result;
+            resolve(db);
         };
 
         request.onerror = (event) => {
             console.error("Database error:", event.target.errorCode);
-            reject(event.target.error); // Reject with the error
+            reject(event.target.error);
         };
     });
 }
@@ -109,14 +115,13 @@ function delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-// Function to make a div draggable
 let isDragging = false;
 
 function makeDraggable(element) {
     let offsetX = 0, offsetY = 0, mouseX = 0, mouseY = 0;
 
     element.addEventListener("mousedown", (e) => {
-        if (isResizing) return; // If resizing is happening, do not allow dragging
+        if (isResizing) return;
 
         isDragging = true;
         mouseX = e.clientX;
@@ -127,7 +132,7 @@ function makeDraggable(element) {
         function doDrag(e) {
             if (!isDragging) return;
 
-            // Calculate new position
+
             const dx = e.clientX - mouseX;
             const dy = e.clientY - mouseY;
             element.style.left = offsetX + dx + "px";
@@ -140,46 +145,47 @@ function makeDraggable(element) {
             window.removeEventListener("mouseup", stopDrag);
         }
 
-        // Attach event listeners for dragging
+
         window.addEventListener("mousemove", doDrag);
         window.addEventListener("mouseup", stopDrag);
     });
 }
 
 
-let isResizing = false; // Global flag to track resizing
+let isResizing = false;
 
 function makeResizable(elementId) {
     const element = document.getElementById(elementId);
     
     if (!element) {
-        return; // Exit if the element doesn't exist
+        return;
     }
 
     const resizer = document.createElement("div");
     resizer.style.width = "10px";
     resizer.style.height = "10px";
-    resizer.style.background = "red"; // Resizer handle style
+    resizer.style.background = "red";
     resizer.style.position = "absolute";
-    resizer.style.right = "0"; // Position to the right
-    resizer.style.bottom = "0"; // Position to the bottom
-    resizer.style.cursor = "se-resize"; // Cursor style
+    resizer.style.right = "0";
+    resizer.style.bottom = "0";
+    resizer.style.cursor = "se-resize";
 
-    // Append the resizer to the element
+
+
+
     element.appendChild(resizer);
 
     resizer.addEventListener("mousedown", (e) => {
         e.preventDefault();
-        isResizing = true; // Start resizing, disable dragging
-        
-        // Calculate the initial size of the element
+        isResizing = true;
+
         const startWidth = element.offsetWidth;
         const startHeight = element.offsetHeight;
         const startX = e.clientX;
         const startY = e.clientY;
 
         function doDrag(e) {
-            // Calculate the new width and height based on mouse movement
+
             element.style.width = startWidth + (e.clientX - startX) + "px";
             element.style.height = startHeight + (e.clientY - startY) + "px";
         }
@@ -187,10 +193,13 @@ function makeResizable(elementId) {
         function stopDrag() {
             window.removeEventListener("mousemove", doDrag);
             window.removeEventListener("mouseup", stopDrag);
-            isResizing = false; // End resizing, enable dragging
+            isResizing = false;
+
         }
 
-        // Attach the drag event listeners
+
+
+
         window.addEventListener("mousemove", doDrag);
         window.addEventListener("mouseup", stopDrag);
     });
@@ -200,7 +209,9 @@ function makeResizable(elementId) {
 function listFoldersInDirectory(directory) {
     console.log("Listing folders in directory:", directory);
 
-    // Function to read the JSON file
+
+
+
     const readJsonFile = () => {
         return new Promise((resolve, reject) => {
             const xhr = new XMLHttpRequest();
@@ -224,7 +235,9 @@ function listFoldersInDirectory(directory) {
         });
     };
 
-    // Function to scan IndexedDB
+
+
+
     const scanIndexedDB = () => {
         return new Promise((resolve, reject) => {
             const transaction = db.transaction(['files'], 'readonly');
@@ -237,12 +250,16 @@ function listFoldersInDirectory(directory) {
                 const cursor = event.target.result;
 
                 if (cursor) {
-                    const filePath = cursor.value.id; // Use ID instead of path
+                    const filePath = cursor.value.id;
 
-                    // Log the file ID being processed
+
+
+
                     console.log("Processing file ID:", filePath);
 
-                    // Check if the ID represents a file under the specified directory
+
+
+
                     if (filePath.startsWith(directory)) {
                         const relativePath = filePath.slice(directory.length);
                         const folderName = relativePath.split('/')[0];
@@ -271,10 +288,14 @@ function listFoldersInDirectory(directory) {
     // Main logic
     return readJsonFile()
         .then(jsonData => {
-            // Process the JSON data to extract folders if JSON file exists
+
+
+
             const folders = new Set();
             for (const file of jsonData.files) {
-                const filePath = file.id; // Assuming your JSON has an array of files with an 'id' property
+                const filePath = file.id;
+
+
                 if (filePath.startsWith(directory)) {
                     const relativePath = filePath.slice(directory.length);
                     const folderName = relativePath.split('/')[0];
@@ -289,7 +310,9 @@ function listFoldersInDirectory(directory) {
         })
         .catch(error => {
             console.warn("JSON file not found or error occurred, scanning IndexedDB:", error);
-            // Fall back to scanning IndexedDB if JSON file is not found
+
+
+
             return scanIndexedDB();
         });
 }

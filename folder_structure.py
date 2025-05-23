@@ -6,16 +6,15 @@ def get_folder_structure(folder_path):
     for item in os.listdir(folder_path):
         item_path = os.path.join(folder_path, item)
         if os.path.isdir(item_path):
-            folder_structure[item] = get_folder_structure(item_path)  # Recursive call for subdirectories
+            folder_structure[item] = get_folder_structure(item_path)
         else:
-            folder_structure[item] = None  # Non-directory files
+            folder_structure[item] = None
     return folder_structure
 
 def main():
     root_folder = 'C'  # Specify the folder to scan
     folder_structure = get_folder_structure(root_folder)
 
-    # Save to JSON file
     with open('folder_structure.json', 'w') as json_file:
         json.dump(folder_structure, json_file, indent=4)
 

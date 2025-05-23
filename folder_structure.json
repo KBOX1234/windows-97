@@ -1,57 +1,57 @@
 {
     "program data": {
-        "index.json": null,
         "lnks": {
-            "fm.link": null,
-            "ie.link": null,
-            "imageview.link": null
-        }
-    },
+            "fm.link": null, 
+            "imageview.link": null, 
+            "ie.link": null
+        }, 
+        "index.json": null
+    }, 
+    "Untitled.png": null, 
     "program files": {
+        "internet exploiter": {
+            "index.html": null, 
+            "ie.js": null
+        }, 
         "filemanager": {
             "fm.html": null
-        },
+        }, 
         "imgviewer": {
             "imgviewer.html": null
-        },
-        "internet exploiter": {
-            "ie.js": null,
-            "index.html": null
         }
-    },
+    }, 
     "system": {
-        "boot": {
-            "api.js": null,
-            "kernel.js": null,
-            "kernelFunctions.js": null
-        },
-        "fonts": {
-            "W95FA.otf": null,
-            "w95fa.zip": null
-        },
-        "icons": {
-            "accesibility_window_abc.png": null,
-            "application_hourglass_small_cool-5.png": null,
-            "directory_closed-4.png": null,
-            "msie1-2.png": null,
-            "windows_slanted-1.png": null
-        },
-        "lib": {
-            "api.js": null
-        },
         "themes": {
             "main.css": null
+        }, 
+        "fonts": {
+            "W95FA.otf": null, 
+            "w95fa.zip": null
+        }, 
+        "boot": {
+            "kernel.js": null, 
+            "api.js": null, 
+            "kernelFunctions.js": null
+        }, 
+        "lib": {
+            "api.js": null
+        }, 
+        "icons": {
+            "windows_slanted-1.png": null, 
+            "accesibility_window_abc.png": null, 
+            "application_hourglass_small_cool-5.png": null, 
+            "msie1-2.png": null, 
+            "directory_closed-4.png": null
         }
-    },
-    "Untitled.png": null,
+    }, 
     "user": {
         "photoes": {
-            "drawing_2024-09-30_10-34-01.png": null,
-            "drawing_2024-09-30_10-40-01.png": null,
-            "drawing_2024-09-30_10-46-29.png": null,
-            "mr.gay.png": null,
-            "pkatu.png": null,
-            "Untitled.png": null
+            "mr.gay.png": null, 
+            "drawing_2024-09-30_10-46-29.png": null, 
+            "Untitled.png": null, 
+            "drawing_2024-09-30_10-40-01.png": null, 
+            "pkatu.png": null, 
+            "drawing_2024-09-30_10-34-01.png": null
         }
     }
 }

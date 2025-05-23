@@ -74,26 +74,27 @@ async function kernel() {
 
             //window API
             if (appilcationIDs[inc].api == "window") {
-                // Create the main window div
+
+
                 let newWindow = document.createElement("div");
-                newWindow.id = inc; // Set the ID to the index
-                newWindow.className = "window"; // Set the class
-            
-                // Create the title bar
+                newWindow.id = inc;
+                newWindow.className = "window";
+
+
                 let titleBar = document.createElement("div");
-                titleBar.className = "titleBar"; // Set the class for title bar
-                titleBar.id = "title_" + inc; // Set the ID for title bar
+                titleBar.className = "titleBar";
+                titleBar.id = "title_" + inc;
                 const icon = await loadFile(appilcationIDs[inc].icon);
                 titleBar.innerHTML = '<img src="data:image/png;base64,'+icon+'" class="tittleBarIcon">'+appilcationIDs[inc].name+'<button class="close" onclick="destroyWindow('+inc+')">X</button>'; // Set the title text
             
                 // Create the content div
                 let contentDiv = document.createElement("div");
-                contentDiv.id = "content_" + inc; // Set the ID for content div
+                contentDiv.id = "content_" + inc;
                 const source = await loadFile(appilcationIDs[inc].data1);
                 let decodedSource = atob(source);
 
-                //default html app
-                    //contentDiv.innerHTML = '<iframe src="'+'data:text/html;base64,'+source+'" frameborder="0" width="100%" height="100%" style="position: absolute; top: 40px; left: 0;"></iframe>';
+
+                //contentDiv.innerHTML = '<iframe src="'+'data:text/html;base64,'+source+'" frameborder="0" width="100%" height="100%" style="position: absolute; top: 40px; left: 0;"></iframe>';
                     const iframe = document.createElement("iframe");
                     iframe.frameBorder = "0";  // Set iframe attributes
                     iframe.width = "95%";
@@ -103,9 +104,8 @@ async function kernel() {
                     iframe.style.left = "0%";
                     iframe.id = "iframe_"+String(inc);
 
-                    // Set the src attribute with the data URI
 
-                    const cssStyle = await loadFile("C/system/themes/main.css")
+                const cssStyle = await loadFile("C/system/themes/main.css")
                     const apijs = await loadFile("C/system/lib/api.js")
                     let fsf = "fail";
                     //fsf = await loadFile(data3);
@@ -126,19 +126,18 @@ async function kernel() {
                     let recodedString = btoa(endString);
                     iframe.src = 'data:text/html;base64,' + recodedString;
 
-                    // Append the iframe to contentDiv
-                    contentDiv.appendChild(iframe);
 
-            
-                // Append title bar and content div to the main window
+                contentDiv.appendChild(iframe);
+
+
                 newWindow.appendChild(titleBar);
                 newWindow.appendChild(contentDiv);
                 //newWindow.className="resizable";
                 newWindow.style.position = "absolute";
                 newWindow.style.width = "600px"; // Set width
                 newWindow.style.height = "400px"; // Set height
-            
-                // Append the new window to the main container
+
+
                 document.getElementById("main").appendChild(newWindow);
             
                 windowArray[windowINC++] = inc;
